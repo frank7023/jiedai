@@ -1,4 +1,19 @@
 # jiedai - 借贷平台
+> * jiedai-util 工具包;
+> * jiedai-model 实体层; 依赖 jiedai-util
+> * jiedai-erp 管理系统; 依赖 jiedai-model
+> * jiedai-service rest/wap的接口业务处理; 依赖 jiedai-model
+> * jiedai-rest APP版-接口; 依赖 jiedai-service
+> * jiedai-wap wap版-接口; 依赖 jiedai-service
+> * jiedai-pc PC版; 依赖 jiedai-model
+> * jiedai-pay 支付管理; 依赖 jiedai-model
+> * jiedai-task 定时任务; 依赖 jiedai-model
+> * jiedai-redis 缓存管理; 依赖 jiedai-model
+> * jiedai-chart 报表管理; 依赖 jiedai-model
+> * jiedai-notify 通知管理; 依赖 jiedai-model
+> * jiedai-message 消息管理; 
+> * jiedai-activity 活动管理; 
+
 
 # 定义 - 数据库表
 产品-project

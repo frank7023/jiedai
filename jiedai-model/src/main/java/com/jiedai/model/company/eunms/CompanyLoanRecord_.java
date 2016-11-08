@@ -5,6 +5,6 @@ package com.jiedai.model.company.eunms;
  * @author chenghailong
  *
  */
-public class CompanyLoanRecord_ {
+public abstract class CompanyLoanRecord_ {
 
 }

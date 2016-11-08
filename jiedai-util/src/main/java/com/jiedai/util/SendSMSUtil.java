@@ -8,40 +8,49 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 /**
- * 短信发送工具类
+ * 短信发送-工具类
  * @author chenghailong
  *
  */
 public class SendSMSUtil {
 
-    static ResourceBundle resourceBundle = ResourceBundle.getBundle("sms");
+	private static ResourceBundle resourceBundle = ResourceBundle.getBundle("sms");
+	
+	/** 工具类-测试 */
+	public static void main(String[] args) {
+		String reslult= SendSMSUtil.sendSMS("13552145073","1","欢迎您的加入，每天签到有红包惊喜！9点、12点、15点理财计划准时相约~海象理财微信公众号，最新活动实时更新，快来关注吧！");
+		System.out.println(reslult);
+	}
 
-    public static String sendSMS(String telphone, String telphoneCount, String msg) {
-        String url=resourceBundle.getString("url");
-        String userId=resourceBundle.getString("username");
-        String password=resourceBundle.getString("password");
-        String result="";
-        try {
-           Content content= Request.Post(url).
-                   bodyForm(Form.form().
-                            add("userId",  userId)
-                           .add("password",  password)
-                           .add("pszMobis",telphone)
-                           .add("pszMsg",msg)
-                           .add("iMobiCount",telphoneCount)
-                           .add("pszSubPort","*")
-                           .add("MsgId",String.valueOf(new Date().getTime()))
-                           .build())
-                    .execute().returnContent();
-             result=content.asString(Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return  result;
-    }
-
-    public static void main(String[] args) {
-       String reslult= sendSMS("13466329314","1","欢迎您的加入，每天签到有红包惊喜！9点、12点、15点理财计划准时相约~海象理财微信公众号，最新活动实时更新，快来关注吧！");
-        System.out.println(reslult);
-    }
+	/**
+	 * HTTP短信发送工具方法
+	 * @param telphone
+	 * @param telphoneCount
+	 * @param msg
+	 * @return
+	 */
+	public static String sendSMS(String telphone, String telphoneCount, String msg) {
+		String url = resourceBundle.getString("url");
+		String userId = resourceBundle.getString("username");
+		String password = resourceBundle.getString("password");
+		String result = "";
+		try {
+			Content content= Request.Post(url).
+				bodyForm(Form.form().
+					add("userId", userId)
+					.add("password", password)
+					.add("pszMobis", telphone)
+					.add("pszMsg", msg)
+					.add("iMobiCount", telphoneCount)
+					.add("pszSubPort", "*")
+					.add("MsgId",String.valueOf(new Date().getTime()))
+					.build())
+				.execute().returnContent();
+			 result=content.asString(Charset.forName("UTF-8"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return  result;
+	}
+	
 }

@@ -1,122 +1,188 @@
 package com.jiedai.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Random;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
- * Created with IntelliJ IDEA.
- * User: wentao_tang
- * Date: 2016/9/28
- * Time: 11:07
- * To change this template use File | Settings | File Templates.
+ * 字符串-工具类: 继承了apache的StringUtils
+ * @author chenghailong
+ *
  */
-public class StringUtil {
-
-    /**
-     * Created with IDEA
-     * Author: wentao_tang
-     * Date: 2016/9/28 11:11
-     * Description:手机号码脱敏  135****1234
-     */
-    public static String markSecurityMobile(String mobilePhone) {
-        if (StringUtils.isNotBlank(mobilePhone)) {
-            return mobilePhone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
-        } else {
-            return "";
-        }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(markSecurityBankCard("6217123423423423456788320"));
-    }
-
-    /**
-     * Created with IDEA
-     * Author: wentao_tang
-     * Date: 2016/9/28 11:37
-     * 普通借记银行卡号19位数，信用卡16位卡号；活期存折账号18位数
-     * Description:银行卡脱敏
-     */
-    public static String markSecurityBankCard(String bankCard) {
-        String SECURITY_MASK_CARD = "********";
-        if (StringUtils.isNotBlank(bankCard) && bankCard.length() > 8) {
-            StringBuffer sb = new StringBuffer();
-            int length = bankCard.length();
-            return sb.append(bankCard.substring(0, 4)).append(SECURITY_MASK_CARD).append(bankCard.substring(length - 4, length)).toString();
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Created with IDEA
-     * Author: wentao_tang
-     * Date: 2016/9/28 11:51
-     * Description:身份证号码脱敏
-     */
-    public static String markSecurityIdCard(String bankCard) {
-        String SECURITY_MASK_ID_CARD = "**********";
-        if (StringUtils.isNotBlank(bankCard) && bankCard.length() > 14) {
-            StringBuilder sb = new StringBuilder();
-            int length = bankCard.length();
-            return sb.append(bankCard.substring(0, 4)).append(SECURITY_MASK_ID_CARD).append(bankCard.substring(length - 4, length)).toString();
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Created with IDEA
-     * Author: wentao_tang
-     * Date: 2016/9/28 11:58
-     * Description: 姓名脱敏
-     */
-    public static String markSecurityName(String name) {
-        if (StringUtils.isNotBlank(name)) {
-            StringBuilder sb = new StringBuilder();
-            int length = name.length();
-            if (length == 2) {
-                return sb.append("*").append(name.substring(1, length)).toString();
-            }
-            if (length == 3) {
-                return sb.append("**").append(name.substring(2, length)).toString();
-            }
-            if (length == 4) {
-                return sb.append("***").append(name.substring(2, length)).toString();
-            }
-            return name;
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Description:生成短信验证码
-     * Author: wentao_tang
-     * Date: 2016/10/17 10:45
-     */
-    public static String msgCode() {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < 6; i++) {
-            sb.append(new Random().nextInt(10));
-        }
-        return sb.toString();
-    }
-    
-    /**
-	 * @Description 判断对象是否为空，非空返回false； 空或NULL返回true
-	 * @author wanglb
-	 * @created 2016年10月17日 下午2:04:58
-	 * @param obj
-	 * @return
+public class StringUtil extends StringUtils {
+	
+	/** 工具类-测试 */
+	public static void main(String[] args) {
+		System.out.println("手机号："+markSecurityMobile("  135-5214-5073  "));
+		System.out.println("姓氏："+markSecuritySurname("欧阳"));
+		System.out.println("名字："+markSecurityName("欧阳"));
+		System.out.println("中间："+markSecurityUsername("欧阳"));
+	}
+	
+	/**
+	 * 手机号码脱敏 : 135****1234
 	 */
-	public static boolean isNull(Object obj) {
-		if (obj == null || "".equals(obj)
-				|| "null".equalsIgnoreCase((String) obj)) {
-			return true;
-		} else {
-			return false;
+	public static String markSecurityMobile(String mobilePhone) {
+		//判空
+		if(StringUtils.isBlank(mobilePhone)){
+			return "";
 		}
+		//去掉特殊字符
+		mobilePhone = mobilePhone.replace("-", "");
+		mobilePhone = mobilePhone.replaceAll(" ", "");
+		//长度校验
+		int length = mobilePhone.length();
+		if(length != 11){
+			StringBuilder sb = new StringBuilder();
+			for(int i=0; i<length; i++){
+				sb.append("*");
+			}
+			return sb.toString();
+		}
+		//脱敏
+		return mobilePhone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+	}
+
+	/**
+	 * 银行卡脱敏: 普通借记银行卡号19位数，信用卡16位卡号；活期存折账号18位数
+	 */
+	public static String markSecurityBankCard(String bankCard) {
+		//判空
+		if(StringUtils.isBlank(bankCard) ){
+			return "";
+		}
+		//去掉特殊字符
+		bankCard = bankCard.replace("-", "");
+		bankCard = bankCard.replaceAll(" ", "");
+		//长度校验
+		int length = bankCard.length();
+		if(length < 8){
+			return bankCard;
+		}
+		//脱敏:前-中-后
+		String SECURITY_MASK_CARD = "********";
+		StringBuilder sb = new StringBuilder();
+		sb.append(bankCard.substring(0, 4));
+		sb.append(SECURITY_MASK_CARD);
+		sb.append(bankCard.substring(length-4, length));
+		return sb.toString();
+	}
+
+	/**
+	 * 身份证号码脱敏: 15位 或 18位
+	 */
+	public static String markSecurityIdCard(String bankCard) {
+		//判空
+		if(StringUtils.isBlank(bankCard)){
+			return "";
+		}
+		//去掉特殊字符
+		bankCard = bankCard.replace("-", "");
+		bankCard = bankCard.replaceAll(" ", "");
+		//长度校验
+		int length = bankCard.length();
+		if(length < 15){
+			return bankCard;
+		}
+		//脱敏:前-中-后
+		String SECURITY_MASK_ID_CARD = "**********";
+		StringBuilder sb = new StringBuilder();
+		sb.append(bankCard.substring(0, 4));
+		sb.append(SECURITY_MASK_ID_CARD);
+		sb.append(bankCard.substring(length-4, length));
+		return sb.toString();
+	}
+
+	/**
+	 * 姓氏脱敏
+	 */
+	public static String markSecuritySurname(String username) {
+		//判空
+		if(StringUtils.isBlank(username)){
+			return "";
+		}
+		//去掉特殊字符
+		username = username.replace("-", "");
+		username = username.replaceAll(" ", "");
+		//长度校验
+		int length = username.length();
+		if(length < 2){
+			return "*";
+		}
+		//脱敏:前-后
+		StringBuilder sb = new StringBuilder();
+		sb.append("*");
+		sb.append(username.substring(1, length));
+		return sb.toString();
+	}
+	
+	/**
+	 * 名字脱敏
+	 */
+	public static String markSecurityName(String username) {
+		//判空
+		if(StringUtils.isBlank(username)){
+			return "";
+		}
+		//去掉特殊字符
+		username = username.replace("-", "");
+		username = username.replaceAll(" ", "");
+		//长度校验
+		int length = username.length();
+		if(length < 2){
+			return "*";
+		}
+		//脱敏:前-中-后
+		StringBuilder sb = new StringBuilder();
+		sb.append(username.substring(0,1));
+		for(int i=0; i<length-1; i++){
+			sb.append("*");
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 姓名中间脱敏
+	 */
+	public static String markSecurityUsername(String username) {
+		//判空
+		if(StringUtils.isBlank(username)){
+			return "";
+		}
+		//去掉特殊字符
+		username = username.replace("-", "");
+		username = username.replaceAll(" ", "");
+		//长度校验
+		int length = username.length();
+		if(length < 2){
+			return "*";
+		}
+		//脱敏:前-中-后
+		StringBuilder sb = new StringBuilder();
+		sb.append(username.substring(0,1));
+		for(int i=0; i<length-2; i++){
+			sb.append("*");
+		}
+		if(length == 2){
+			sb.append("*");
+		} else {
+			sb.append(username.substring(length-1, length));
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 生成短信验证码
+	 */
+	public static String msgCode() {
+		int number = 6;
+		return StringUtil.msgCode(number);
+	}
+	public static String msgCode(int number) {
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<number; i++) {
+			sb.append(new Random().nextInt(10));
+		}
+		return sb.toString();
 	}
 }
